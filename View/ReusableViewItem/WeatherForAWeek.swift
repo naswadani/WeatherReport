@@ -9,9 +9,13 @@
 import SwiftUI
 
 struct WeatherForAWeek: View {
+    //MARK: PROPERTIES
     let day: String
     let date: String
+    
+    //MARK: BODY
     var body: some View {
+        //MARK: VSTACK
         VStack(alignment: .center) {
             Text(day)
                 .font(.headline)

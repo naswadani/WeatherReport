@@ -24,9 +24,9 @@ class WeatherService {
     
     func searchLocation(
         nameLocation: String,
-        completion: @escaping(Result<[LocationModel], WeatherError>) -> Void
+        completion: @escaping(Result<[LocationModel], WeatherError>) -> Void?
     ) {
-        let urlString: String = "http://api.openweathermap.org/geo/1.0/direct?q=\(nameLocation)&limit=5&appid=\(API_KEY)"
+        let urlString: String = "https://api.openweathermap.org/geo/1.0/direct?q=\(nameLocation)&limit=5&appid=\(API_KEY)"
         
         guard let url = URL(string: urlString) else {
             completion(.failure(.invalidURL))
