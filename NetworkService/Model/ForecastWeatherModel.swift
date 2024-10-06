@@ -10,7 +10,6 @@ import Foundation
 // MARK: - Forecast
 struct ForecastWeatherModel: Decodable {
     let cod: String
-    let message, cnt: Int
     let message: Int
     let cnt: Int
     let list: [ForecastItem]
