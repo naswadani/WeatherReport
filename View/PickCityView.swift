@@ -10,7 +10,7 @@ import SwiftUI
 struct PickCityView: View {
     //MARK: PROPERTIES
     @Environment(\.presentationMode) var presentationMode
-    @StateObject private var viewModel: PickCityViewModel = PickCityViewModel()
+    @ObservedObject var viewModel: ViewModel 
     
     var body: some View {
         //MARK: NAVIGATION VIEW
@@ -36,6 +36,10 @@ struct PickCityView: View {
                 ForEach(viewModel.filteredCities, id: \.name) { city in
                     ItemListCity(location: city)
                         .padding(.horizontal)
+                        .onTapGesture {
+                            viewModel.fetchWeatherReport(lon: city.lon, lat: city.lat)
+                            presentationMode.wrappedValue.dismiss()
+                        }
                     Divider()
                         .padding(.horizontal)
                 }
@@ -59,5 +63,5 @@ struct PickCityView: View {
 }
 
 #Preview {
-    PickCityView()
+    PickCityView(viewModel: ViewModel())
 }

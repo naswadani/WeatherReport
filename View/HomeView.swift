@@ -9,40 +9,41 @@
 import SwiftUI
 
 struct HomeView: View {
-    //MARK: PROPERTIES
+    // MARK: PROPERTIES
+    @StateObject var viewModel: ViewModel = ViewModel()
     @State private var rotate = false
     @State private var isSheetPresented = false
+
     var body: some View {
-        //MARK: VSTACK
+        // MARK: VSTACK
         VStack {
             Text("Today")
                 .font(.system(.title))
                 .fontWeight(.bold)
             
-            Text("Friday, 27 Sep")
+            Text("\(viewModel.currentWeather?.date ?? "" ) ")
                 .font(.system(.headline))
                 .fontWeight(.light)
             
             //MARK: VSTACK
             VStack(alignment: .center) {
-                Image(systemName: "cloud.rain")
+                Image(systemName: WeatherIcon(weatherID: viewModel.currentWeather?.weather.first?.id ?? 800).rawValue)
                     .resizable()
-                    .frame(width: 20, height: 25)
+                    .frame(width: 25, height: 25)
                     .padding(.top, 10)
                 
-                Text("Heavy Rain")
+                Text("\(viewModel.currentWeather?.weather.first?.main ?? "")")
                     .font(.system(.title2))
                     .fontWeight(.medium)
                 
-                Text("20°")
+                Text("\(viewModel.currentWeather?.main.temperature ?? 0)°")
                     .font(.system(.largeTitle))
                     .fontWeight(.bold)
                 //MARK: HSTACK
                 HStack {
-                    DescriptonWeather(title: "Wind", unit: "km/h", icon: "wind", value: 10)
-                    DescriptonWeather(title: "Precipitation", unit: "mm", icon: "drop.degreesign", value: 9)
-                    DescriptonWeather(title: "Pressure", unit: "hpa", icon: "arrow.down.and.line.horizontal.and.arrow.up", value: 100)
-                    DescriptonWeather(title: "Air Quality", unit: "point", icon: "water.waves", value: 140)
+                    DescriptonWeather(title: "Wind", unit: "km/h", icon: "wind", value: viewModel.currentWeather?.wind.speedString ?? "" )
+                    DescriptonWeather(title: "Precipitation", unit: "mm", icon: "drop.degreesign", value: "\(viewModel.currentWeather?.main.humidity ?? 0)")
+                    DescriptonWeather(title: "Pressure", unit: "hpa", icon: "arrow.down.and.line.horizontal.and.arrow.up", value: "\(viewModel.currentWeather?.main.humidity ?? 0)")
                 }
                 .padding(.bottom, 10)
                 
@@ -58,7 +59,7 @@ struct HomeView: View {
                 .font(.system(.title2))
                 .padding(.top, 35)
             
-            //MARK: HSTACK
+            // MARK: HSTACK
             HStack {
                 WeatherForAWeek(day: "Tue", date: "27/09")
                 WeatherForAWeek(day: "Wed", date: "28/09")
@@ -67,19 +68,18 @@ struct HomeView: View {
             }
             Spacer()
             
-            //MARK: VSTACK
+            // MARK: VSTACK
             VStack {
                 Image(systemName: rotate ? "chevron.down" : "chevron.up")
                     .font(.system(.title3))
-                Text("London")
-                    .font(.system(.title3))
+                Text(viewModel.currentWeather?.name ?? "Unknown City")       .font(.system(.title3))
                     .padding(.top, 10)
             }
             .onTapGesture(perform: {
                 self.isSheetPresented = true
             })
             .sheet(isPresented: $isSheetPresented) {
-                PickCityView()
+                PickCityView(viewModel: viewModel)
             }
         }
     }

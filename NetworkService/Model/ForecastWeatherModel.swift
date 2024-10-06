@@ -19,14 +19,12 @@ struct List: Decodable {
     let dt: Int
     let main: Main
     let weather: [Weather]
-    let clouds: Clouds
     let wind: Wind
     let visibility, pop: Int
-    let sys: Sys
     let dtTxt: String
 
     enum CodingKeys: String, CodingKey {
-        case dt, main, weather, clouds, wind, visibility, pop, sys
+        case dt, main, weather, wind, visibility, pop
         case dtTxt = "dt_txt"
     }
 }

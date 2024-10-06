@@ -13,20 +13,20 @@ struct DescriptonWeather: View {
     let title: String
     let unit: String
     let icon: String
-    let value: Int
+    let value: String
     var body: some View {
         //MARK: VSTACK
         VStack(alignment: .center) {
             Text(title)
-                .font(.caption)
+                .font(.subheadline)
                 .padding(.bottom, 10)
             
             Image(systemName: icon)
-                .frame(width: 10, height: 10)
-                .padding(.bottom, 15)
+                .frame(width: 15, height: 15)
+                .padding(.bottom, 10)
             
             Text("\(value)\n\(unit)")
-                .font(.caption)
+                .font(.footnote)
                 .multilineTextAlignment(.center)
         }
         .frame(maxWidth: .infinity, minHeight: 100, maxHeight: 100) 
@@ -34,5 +34,5 @@ struct DescriptonWeather: View {
 }
 
 #Preview {
-    DescriptonWeather(title: "Wind",unit: "km/h", icon: "wind", value: 10 )
+    DescriptonWeather(title: "Wind",unit: "km/h", icon: "wind", value: "10" )
 }

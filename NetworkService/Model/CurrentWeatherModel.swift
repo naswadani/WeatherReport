@@ -14,13 +14,18 @@ struct CurrentWeatherModel: Decodable {
     let main: Main
     let visibility: Int
     let wind: Wind
-    let rain: Rain
-    let clouds: Clouds
     let dt: Int
-    let sys: Sys
-    let timezone: Int
     let id: Int
     let name: String
+    
+    var date: String {
+        let date: Date = Date(timeIntervalSince1970: TimeInterval(dt))
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        return dateFormatter.string(from: date)
+    }
 }
 
 struct Coord: Decodable {
@@ -36,41 +41,71 @@ struct Weather: Decodable {
 }
 
 struct Main: Decodable {
-    let temp, feelsLike, tempMin, tempMax: Double
-    let pressure, humidity, seaLevel, grndLevel: Int
-    
+    let temp: Double
+    let pressure: Int
+    let humidity: Int
+    let seaLevel: Int
+    let grndLevel: Int?
+
     enum CodingKeys: String, CodingKey {
         case temp
-        case feelsLike = "feels_like"
-        case tempMin = "temp_min"
-        case tempMax = "temp_max"
         case pressure
         case humidity
         case seaLevel = "sea_level"
         case grndLevel = "grnd_level"
     }
-}
-
-struct Wind: Decodable {
-    let speed: Int
-    let deg: Double
-}
-
-struct Rain: Decodable {
-    let the1h: Double
     
-    enum CodingKeys: String, CodingKey {
-        case the1h = "1h"
+    var temperature: Int {
+        let temp = temp - 273.15
+        return Int(temp)
     }
 }
 
-struct Clouds: Decodable {
-    let all: Int
+struct Wind: Decodable {
+    let speed: Double
+    let deg: Int?
+    
+    var speedString: String {
+        return String(format: "%.2f", speed)
+    }
 }
 
-struct Sys: Decodable {
-    let type: Int
-    let id: Int
-    let country: String
+enum WeatherIcon: String {
+    case clearSky = "sun.max"
+    case fewClouds = "cloud.sun"
+    case scatteredClouds = "cloud"
+    case brokenClouds = "cloud.fill"
+    case showerRain = "cloud.drizzle"
+    case rain = "cloud.rain"
+    case thunderstorm = "cloud.bolt.rain"
+    case snow = "snow"
+    case mist = "cloud.fog"
+
+    init(weatherID: Int) {
+        switch weatherID {
+        case 200...232:
+            self = .thunderstorm
+        case 300...321:
+            self = .showerRain
+        case 500...531:
+            self = .rain
+        case 600...622:
+            self = .snow
+        case 701...781:
+            self = .mist
+        case 800:
+            self = .clearSky
+        case 801:
+            self = .fewClouds
+        case 802...804:
+            self = .brokenClouds
+        default:
+            self = .clearSky // Default case
+        }
+    }
 }
+
+
+
+
 
