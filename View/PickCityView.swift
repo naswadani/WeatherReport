@@ -38,6 +38,7 @@ struct PickCityView: View {
                         .padding(.horizontal)
                         .onTapGesture {
                             viewModel.fetchWeatherReport(lon: city.lon, lat: city.lat)
+                            viewModel.fetchForecastWeather(lon: city.lon, lat: city.lat)
                             presentationMode.wrappedValue.dismiss()
                         }
                     Divider()

@@ -12,6 +12,7 @@ class ViewModel: ObservableObject {
     @Published var searchCity: String = ""
     @Published var cities: [LocationModel] = []
     @Published var filteredCities: [LocationModel] = []
+    @Published var currentForecastWeather: ForecastWeatherModel?
     @Published var currentWeather: CurrentWeatherModel?
     @Published var errorMessage: String?
 
@@ -25,10 +26,8 @@ class ViewModel: ObservableObject {
                 switch result {
                 case .success(let weather):
                     self.currentWeather = weather
-                    print(weather)
                 case .failure(let error):
                     self.errorMessage = "Failed to fetch weather: \(error.localizedDescription)" 
-                    print(error)
                 }
             }
         }
@@ -42,8 +41,21 @@ class ViewModel: ObservableObject {
                     self.cities = cities
                     self.filterCities()
                 case .failure(let error):
-                    self.errorMessage = "Failed to search cities: \(error.localizedDescription)" // Provide feedback to the user
+                    self.errorMessage = "Failed to search cities: \(error.localizedDescription)"
                     print(error)
+                }
+            }
+        }
+    }
+    
+    func fetchForecastWeather(lon: Double, lat: Double) {
+        apiService.fetchForecastWeather(lon: lon, lat: lat) { result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let weather):
+                    self.currentForecastWeather = weather
+                case .failure(let error):
+                    self.errorMessage = "Failed to search cities: \(error.localizedDescription)"
                 }
             }
         }
