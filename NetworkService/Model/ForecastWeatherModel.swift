@@ -9,14 +9,7 @@ import Foundation
 
 // MARK: - Forecast
 struct ForecastWeatherModel: Decodable {
-    let cod: String
-    let message: Int
-    let cnt: Int
     let list: [ForecastItem]
-    
-    enum CodingKeys: String, CodingKey {
-        case cod, message, cnt, list
-    }
 }
 
 // MARK: - List

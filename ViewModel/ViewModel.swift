@@ -9,12 +9,14 @@ import Foundation
 
 class ViewModel: ObservableObject {
     let apiService: WeatherService
+    @Published var todayDate: String = ""
     @Published var searchCity: String = ""
     @Published var cities: [LocationModel] = []
     @Published var filteredCities: [LocationModel] = []
     @Published var currentForecastWeather: ForecastWeatherModel?
     @Published var currentWeather: CurrentWeatherModel?
     @Published var errorMessage: String?
+    
 
     init() {
         self.apiService = WeatherService()
@@ -68,6 +70,32 @@ class ViewModel: ObservableObject {
             seenNames.insert(location.name)
             return true
         }
+    }
+    
+    func getTodayDate() {
+        let todayDate = Calendar.current.startOfDay(for: Date())
+        
+        let dateFormatterDay = DateFormatter()
+        dateFormatterDay.dateFormat = "EEEE dd/MM"
+        
+        let dayString = dateFormatterDay.string(from: todayDate)
+        
+        self.todayDate = dayString
+    }
+    
+    func getFutureDateComponents(daysFromToday: Int) -> (String, String) {
+        let futureDate = Calendar.current.date(byAdding: .day, value: daysFromToday, to: Date())!
+        
+        let dateFormatterDay = DateFormatter()
+        dateFormatterDay.dateFormat = "EEE"
+        
+        let dateFormatterDate = DateFormatter()
+        dateFormatterDate.dateFormat = "dd/MM"
+        
+        let dayString = dateFormatterDay.string(from: futureDate)
+        let dateString = dateFormatterDate.string(from: futureDate)
+        
+        return (dayString, dateString)
     }
 }
 

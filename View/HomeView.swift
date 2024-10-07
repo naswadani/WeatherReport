@@ -21,7 +21,7 @@ struct HomeView: View {
                 .font(.system(.title))
                 .fontWeight(.bold)
             
-            Text("\(viewModel.currentWeather?.date ?? "" ) ")
+            Text(viewModel.todayDate)
                 .font(.system(.headline))
                 .fontWeight(.light)
             
@@ -29,7 +29,7 @@ struct HomeView: View {
             VStack(alignment: .center) {
                 Image(systemName: WeatherIcon(weatherID: viewModel.currentWeather?.weather.first?.id ?? 800).rawValue)
                     .resizable()
-                    .frame(width: 25, height: 25)
+                    .frame(width: 25, height: 20)
                     .padding(.top, 10)
                 
                 Text("\(viewModel.currentWeather?.weather.first?.main ?? "")")
@@ -61,10 +61,10 @@ struct HomeView: View {
             
             // MARK: HSTACK
             HStack {
-                WeatherForAWeek(day: "Tue", date: "27/09")
-                WeatherForAWeek(day: "Wed", date: "28/09")
-                WeatherForAWeek(day: "Thu", date: "29/09")
-                WeatherForAWeek(day: "Fri", date: "30/09")
+                ForEach(0..<4, id: \.self) { index in
+                    let (day, date) = viewModel.getFutureDateComponents(daysFromToday: index + 1)
+                    WeatherForAWeek(day: day, date: date)
+                }
             }
             Spacer()
             
@@ -72,7 +72,8 @@ struct HomeView: View {
             VStack {
                 Image(systemName: rotate ? "chevron.down" : "chevron.up")
                     .font(.system(.title3))
-                Text(viewModel.currentWeather?.name ?? "Unknown City")       .font(.system(.title3))
+                Text(viewModel.currentWeather?.name ?? "Unknown City")
+                    .font(.system(.title3))
                     .padding(.top, 10)
             }
             .onTapGesture(perform: {
@@ -80,6 +81,10 @@ struct HomeView: View {
             })
             .sheet(isPresented: $isSheetPresented) {
                 PickCityView(viewModel: viewModel)
+            }
+            .onAppear() {
+                viewModel.getTodayDate()
+                viewModel.fetchWeatherReport(lon: 110.838189, lat: -6.8170915)
             }
         }
     }

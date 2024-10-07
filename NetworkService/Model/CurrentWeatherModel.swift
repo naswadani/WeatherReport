@@ -17,15 +17,6 @@ struct CurrentWeatherModel: Decodable {
     let dt: Int
     let id: Int
     let name: String
-    
-    var date: String {
-        let date: Date = Date(timeIntervalSince1970: TimeInterval(dt))
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        return dateFormatter.string(from: date)
-    }
 }
 
 struct Coord: Decodable {
